@@ -1,0 +1,22 @@
+version: "2"
+services:
+  db:
+    container_name: "tictactoe-db"
+    image: postgres
+    ports:
+      - "5432:5432"
+  server:
+    container_name: "tictactoe-server"
+    environment:
+      - "PORT=3000"
+      - "PGPASSWORD=mysecretpassword"
+      - "PGPORT=5432"
+      - "PGHOST=db"
+    image: "birgirob/tictactoe"
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    command: node run.js
+    entrypoint: ./migrations.sh
