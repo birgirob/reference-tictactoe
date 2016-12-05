@@ -12,11 +12,12 @@ services:
       - "PGPASSWORD=mysecretpassword"
       - "PGPORT=5432"
       - "PGHOST=db"
-    image: "birgirob/tictactoe"
+      - "NODE_ENV=prod"
+    image: "birgirob/tictactoe:${GIT_COMMIT}"
     build: .
     ports:
       - "3000:3000"
     depends_on:
       - db
     command: node run.js
-    entrypoint: ./migrations.sh
+    entrypoint: ./migrations.sh prod

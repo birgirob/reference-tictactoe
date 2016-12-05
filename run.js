@@ -2,7 +2,7 @@ module.exports = (function() {
     require('server/globals');
 
     var port = process.env.PORT || 8080;
-    var env = process.env.NODE_ENV || 'development';
+    var env = process.env.NODE_ENV || 'dev';
 
     var server = require('./server/server.js')(inject({
         port,
