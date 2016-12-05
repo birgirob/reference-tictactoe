@@ -5,8 +5,9 @@ rm -rf ./dist
 
 # Install the Node modules for the server and client
 npm install
-NODE_PATH=/client
+cd client/
 npm install
+cd ..
 
 # Create Git hash and URL environment variables
 if [ -z "$GIT_COMMIT" ]; then
