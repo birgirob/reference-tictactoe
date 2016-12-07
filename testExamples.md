@@ -6,7 +6,7 @@ Then [Resulting Event(s)]
 
 
 - Create game
-Given [ No prior games exist ],
+Given [ LoggedIn() ],
 When [ CreateGame() ],
 Then [ GameCreated(id=1) ]
 
@@ -22,7 +22,8 @@ Then [ FullGameJoinAttempted() ]
 
 - Leave game
 Given [ GameJoined(id=1) ],
-When [ 
+When [ LeaveGame(id=1) ],
+Then [ PlayerLeftGame(id=1) ]
 
 - Place legal move
 Given [ GameCreated(id=1), GameJoined(id=1) ],
@@ -39,9 +40,19 @@ Given [ PlaceMove(0,0,X) ],
 When [ PlaceMove(0,1,X ],
 Then [ IllegalMove("Not your turn") ]
 
-- Place winning move
+- Place winning move (horizontal)
 Given [ PlaceMove(0,0,X), PlaceMove(0,1,X) ],
 When [ PlaceMove(0,2,X) ],
+Then [ PlayerWon(X) ]
+
+- Place winning move (vertical)
+Given [ PlaceMove(0,0,X), PlaceMove(1,0,X) ],
+When [ PlaceMove(2,0,X) ],
+Then [ PlayerWon(X) ]
+
+- Place winning move (diagonal)
+Given [ PlaceMove(0,0,X), PlaceMove(1,1,X) ],
+When [ PlaceMove(2,2,X) ],
 Then [ PlayerWon(X) ]
 
 - Place drawing move
