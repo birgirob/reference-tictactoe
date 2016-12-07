@@ -6,7 +6,7 @@ Then [Resulting Event(s)]
 
 
 - Create game
-Given [ LoggedIn() ],
+Given [ ],
 When [ CreateGame() ],
 Then [ GameCreated(id=1) ]
 
