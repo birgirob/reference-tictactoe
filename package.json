@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Base for a simple nodejs server",
   "private": true,
+  "author": {
+    "name": "Birgir Örn Birgisson",
+    "email": "birgirob@gmail.com"
+  },
   "main": "run.js",
   "dependencies": {
     "autoprefixer-core": "^3.1.0",

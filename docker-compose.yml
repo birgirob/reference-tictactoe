@@ -1,10 +1,12 @@
 version: "2"
 services:
+  # Database container
   db:
     container_name: "tictactoe-db"
     image: postgres
     ports:
       - "5432:5432"
+  # Tic tac toe container
   server:
     container_name: "tictactoe-server"
     environment:
@@ -13,11 +15,11 @@ services:
       - "PGPORT=5432"
       - "PGHOST=db"
       - "NODE_ENV=prod"
-    image: "birgirob/tictactoe:${GIT_COMMIT}"
+    image: "birgirob/tictactoe:${GIT_COMMIT}" # Fetches the image using the .env file
     build: .
     ports:
       - "3000:3000"
     depends_on:
       - db
-    command: node run.js
-    entrypoint: ./migrations.sh prod
+    command: node run.js # Last command to run
+    entrypoint: ./migrations.sh prod # Script to run
