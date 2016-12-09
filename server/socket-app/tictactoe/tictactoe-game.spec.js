@@ -7,78 +7,23 @@ var tictactoe = require('./tictactoe-handler')(inject({
     TictactoeState
 }));
 
-var createGameEvent = {
-    gameId: 1,
-    type: "CreateGame",
-    user: {
-        userName: "Guy 1"
-    },
-    name: "TheFirstGame",
-    timeStamp: "2016-12-09T12:00:00"
-};
-
-var gameCreatedEvent = {
-    gameId: 1,
+var createEvent = {
     type: "GameCreated",
     user: {
-        userName: "Guy 1"
+        userName: "TheGuy"
     },
     name: "TheFirstGame",
-    timeStamp: "2016-12-09T12:00:00",
-    side: "X"
+    timeStamp: "2014-12-02T11:29:29"
 };
 
-var joinGameEvent = {
-    gameId: 1,
-    type: "JoinGame",
-    user: {
-        userName: "Guy 2"
-    },
-    name: "TheFirstGame",
-    timeStamp: "2016-12-09T12:00:10"
-};
-
-var gameJoinedEvent = {
-    gameId: 1,
+var joinEvent = {
     type: "GameJoined",
     user: {
-        userName: "Guy 2",
+        userName: "Gummi"
     },
     name: "TheFirstGame",
-    timestamp: "2016-12-09T12:00:10",
-    side: "O"
+    timeStamp: "2014-12-02T11:29:29"
 };
-
-var joinFullGameEvent = {
-    gameId: 1,
-    type: "JoinGame",
-    user: {
-        userName: "Guy 3",
-    },
-    name: "TheFirstGame",
-    timeStamp: "2016-12-09T12:00:20"
-};
-
-var fullGameJoinAttemptedEvent = {
-    gameId: 1,
-    type: "FullGameJoinAttempted",
-    user: {
-        userName: "Guy 3",
-    },
-    name: "TheFirstGame",
-    timeStamp: "2016-12-09T12:00:20"
-};
-
-var placeMoveEvent = {
-    gameId: 1,
-    type: "PlaceMove",
-    user: {
-        userName: "Guy 1"
-    },
-    name: "TheFirstGame",
-    timeStamp: "2016-12-09T12:00:30",
-    side: "X"
-}
 
 
 describe('create game command', function() {
@@ -103,15 +48,15 @@ describe('create game command', function() {
 
         given = [];
         when =
-            {
-                id:"123987",
-                type: "CreateGame",
-                user: {
-                    userName: "TheGuy"
-                },
-                name: "TheFirstGame",
-                timeStamp: "2014-12-02T11:29:29"
-            };
+        {
+            id:"123987",
+            type: "CreateGame",
+            user: {
+                userName: "TheGuy"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2014-12-02T11:29:29"
+        };
         then = [
             {
                 type: "GameCreated",
@@ -158,14 +103,14 @@ describe('join game command', function () {
         }
         ];
         when =
-            {
-                type: "JoinGame",
-                user: {
-                    userName: "Gummi"
-                },
-                name: "TheFirstGame",
-                timeStamp: "2014-12-02T11:29:29"
-            };
+        {
+            type: "JoinGame",
+            user: {
+                userName: "Gummi"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2014-12-02T11:29:29"
+        };
         then = [
             {
                 type: "GameJoined",

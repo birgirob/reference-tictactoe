@@ -4,8 +4,6 @@ module.exports = function (injected) {
 
     return function (history) {
 
-        var gamefull = true;
-
         function processEvent(event) {
         }
 
@@ -13,15 +11,10 @@ module.exports = function (injected) {
             _.each(history, processEvent);
         }
 
-        function gameFull() {
-            return gamefull;
-        }
-
         processEvents(history);
 
         return {
-            processEvents: processEvents,
-            gameFull: gameFull
+            processEvents: processEvents
         }
     };
 };
