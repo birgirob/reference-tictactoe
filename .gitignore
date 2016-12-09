@@ -4,6 +4,7 @@
 /build
 /dist
 /.idea/
+/test-results
 todo.md
 .env
 npm-debug.log
