@@ -4,9 +4,15 @@ module.exports = function (injected) {
 
     return function (history) {
 
-        var gamefull = true;
+        var gamefull = false;
+        var playerCount = 0;
+
+        var board = [ ];
 
         function processEvent(event) {
+            if (event.type === "GameJoined") {
+                gamefull = true;
+            }
         }
 
         function processEvents(history) {
