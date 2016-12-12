@@ -4,7 +4,7 @@ module.exports = (function() {
     var port = process.env.PORT || 8080;
     var env = process.env.NODE_ENV || 'dev';
 
-    console.log("Run env:", process.env);
+    console.log("Run env:", process.env.NODE_ENV);
 
     var server = require('./server/server.js')(inject({
         port,

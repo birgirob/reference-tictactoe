@@ -7,7 +7,7 @@ describe("Game command handler", function () {
 
     var commandRouter, eventRouter, eventStore;
 
-    var MessageRouter = require('client/src/common/framework/message-router');
+    var MessageRouter = require('../../../client/src/common/framework/message-router');
 
     var executedCommand;
     var aggregate = function(events){

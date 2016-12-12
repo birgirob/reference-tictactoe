@@ -4,7 +4,7 @@ describe('Tictactoe game server context', function () {
 
     var tictactoeContextModule = require('./tictactoe-context');
     var context, commandRouter, eventRouter, eventStore;
-    var MessageRouter = require('client/src/common/framework/message-router');
+    var MessageRouter = require('../../../client/src/common/framework/message-router');
 
     var fakeEventStore = function (existingEvents) {
         var eventsLoadCount = 0;
