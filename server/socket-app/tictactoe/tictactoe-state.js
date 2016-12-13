@@ -4,14 +4,24 @@ module.exports = function (injected) {
 
     return function (history) {
 
-        var gamefull = false;
+        var gameFull = false;
         var playerCount = 0;
+        var currentPlayer = 'X';
+        var moveCount = 0;
 
-        var board = [ ];
+
+        var board = [ [ null, null, null ],
+                      [ null, null, null ],
+                      [ null, null, null ] ];
 
         function processEvent(event) {
             if (event.type === "GameJoined") {
-                gamefull = true;
+                gameFull = true;
+            }
+            if (event.type === "MovePlaced") {
+                board[event.coords.x][event.coords.y] = currentPlayer;
+                moveCount++;
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
             }
         }
 
@@ -19,15 +29,39 @@ module.exports = function (injected) {
             _.each(history, processEvent);
         }
 
-        function gameFull() {
-            return gamefull;
+        function isGameFull() {
+            return gameFull;
+        }
+
+        function getCurrentPlayer() {
+            return currentPlayer;
+        }
+
+        function getMoveCount() {
+            return moveCount;
+        }
+
+        function isCellOccupied(coords) {
+            /*
+            0,0    0,1    0,2
+            1,0    1,1    1,2
+            2,0    2,1    2,2
+            */
+            if (board[coords.x][coords.y] != null) {
+                return true;
+            }
+
+            return false;
         }
 
         processEvents(history);
 
         return {
             processEvents: processEvents,
-            gameFull: gameFull
+            isGameFull: isGameFull,
+            getCurrentPlayer: getCurrentPlayer,
+            getMoveCount: getMoveCount,
+            isCellOccupied: isCellOccupied
         }
     };
 };

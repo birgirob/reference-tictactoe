@@ -77,9 +77,27 @@ var placeMoveEvent = {
     },
     name: "TheFirstGame",
     timeStamp: "2016-12-09T12:00:30",
-    side: "X"
+    side: "X",
+    coords: {
+        x: 0,
+        y: 0
+    }
 }
 
+var firstMovePlacedEvent = {
+    gameId: 1,
+    type: "MovePlaced",
+    user: {
+        userName: "Guy 1"
+    },
+    name: "TheFirstGame",
+    timeStamp: "2016-12-09T12:00:30",
+    side: "X",
+    coords: {
+        x: 0,
+        y: 0
+    }
+};
 
 describe('create game command', function() {
 
@@ -148,6 +166,111 @@ describe('join game command', function () {
             timeStamp: "2016-12-09T12:00:20"
         };
         then = [ fullGameJoinAttemptedEvent ];
+    });
+});
+
+describe('place move command', function () {
+
+
+    var given, when, then;
+
+    beforeEach(function () {
+        given = undefined;
+        when = undefined;
+        then = undefined;
+    });
+
+    afterEach(function () {
+        tictactoe(given).executeCommand(when, function (actualEvents) {
+            should(JSON.stringify(actualEvents)).be.exactly(JSON.stringify(then));
+        });
+    });
+
+
+    it('should emit MovePlaced event when placing legal move', function () {
+
+        given = [ gameCreatedEvent, gameJoinedEvent ];
+        when = {
+            gameId: 1,
+            type: "PlaceMove",
+            user: {
+                userName: "Guy 1"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:30",
+            side: "X",
+            coords: {
+                x: 0,
+                y: 0
+            }
+        };
+        then = [ {
+            gameId: 1,
+            type: "MovePlaced",
+            user: {
+                userName: "Guy 1"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:30",
+            side: "X",
+            coords: {
+                x: 0,
+                y: 0
+            }
+        } ];
+
+    });
+
+    it('should emit IllegalMoveNotYourTurn event when wrong player is placing a move', function() {
+       given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent ];
+       when = placeMoveEvent;
+       then = [ {
+           gameId: 1,
+           type: "IllegalMoveNotYourTurn",
+           user: {
+               userName: "Guy 1"
+           },
+           name: "TheFirstGame",
+           timeStamp: "2016-12-09T12:00:30",
+           side: "X",
+           coords: {
+               x: 0,
+               y: 0
+           }
+       }];
+    });
+
+    it('should emit IllegalMove event when placing in occupied cell', function() {
+
+        given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent ];
+        when = {
+            gameId: 1,
+            type: "PlaceMove",
+            user: {
+                userName: "Guy 2"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "O",
+            coords: {
+                x: 0,
+                y: 0
+            }
+        };
+        then = [ {
+            gameId: 1,
+            type: "IllegalMoveOccupiedCell",
+            user: {
+                userName: "Guy 2",
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "O",
+            coords: {
+                x: 0,
+                y: 0
+            }
+        }];
     });
 });
 
