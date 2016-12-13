@@ -86,6 +86,9 @@ module.exports = function(injected){
 
                         gameState.processEvents(events);
 
+                        // Check for game over events and add them to the event array
+
+                        // Check if current player has won
                         if (gameState.hasPlayerWon(cmd.side)) {
                             events.push({
                                 gameId: cmd.gameId,
@@ -97,7 +100,7 @@ module.exports = function(injected){
                             })
                         }
 
-                        // Check for game over conditions and add them to the events if needed
+                        // Check if game is a draw
                         else if (gameState.getMoveCount() === 9) {
                             events.push({
                                 gameId: cmd.gameId,

@@ -49,16 +49,6 @@ var gameJoinedEvent = {
     side: "O"
 };
 
-var joinFullGameEvent = {
-    gameId: 1,
-    type: "JoinGame",
-    user: {
-        userName: "Guy 3",
-    },
-    name: "TheFirstGame",
-    timeStamp: "2016-12-09T12:00:20"
-};
-
 var fullGameJoinAttemptedEvent = {
     gameId: 1,
     type: "FullGameJoinAttempted",
@@ -190,19 +180,7 @@ describe('Place move command', function () {
     it('should emit MovePlaced event when placing legal move', function () {
 
         given = [ gameCreatedEvent, gameJoinedEvent ];
-        when = {
-            gameId: 1,
-            type: "PlaceMove",
-            user: {
-                userName: "Guy 1"
-            },
-            name: "TheFirstGame",
-            timeStamp: "2016-12-09T12:00:30",
-            side: "X",
-            coords: {
-                x: 0, y: 0
-            }
-        };
+        when = placeMoveEvent;
         then = [ {
             gameId: 1,
             type: "MovePlaced",

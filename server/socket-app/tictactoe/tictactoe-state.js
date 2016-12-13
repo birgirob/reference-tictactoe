@@ -66,12 +66,7 @@ module.exports = function (injected) {
         }
 
         function isCellOccupied(coords) {
-            /*
-            0,0    0,1    0,2
-            1,0    1,1    1,2
-            2,0    2,1    2,2
-            */
-            if (board[coords.x][coords.y] != null) {
+            if (board[coords.x][coords.y] !== null) {
                 return true;
             }
 
