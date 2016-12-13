@@ -561,6 +561,88 @@ describe('Place move command', function () {
             }
         ];
     });
+
+    it('should emit game won event if player places winning move (diagonal)', function() {
+        given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent,
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 0, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 1, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 0, y: 2
+                }
+            }
+        ];
+        when = {
+            gameId: 1,
+            type: "PlaceMove",
+            user: {
+                userName: "Guy 1"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "X",
+            coords: {
+                x: 2, y: 2
+            }
+        };
+        then = [
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 2, y: 2
+                }
+            },
+            {
+                gameId: 1,
+                type: "GameWon",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X"
+            }
+        ];
+    });
 });
 
 
