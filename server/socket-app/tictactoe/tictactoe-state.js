@@ -21,6 +21,8 @@ module.exports = function (injected) {
             if (event.type === "MovePlaced") {
                 board[event.coords.x][event.coords.y] = currentPlayer;
                 moveCount++;
+
+                // Switch current player
                 currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
             }
         }
@@ -47,6 +49,12 @@ module.exports = function (injected) {
             1,0    1,1    1,2
             2,0    2,1    2,2
             */
+
+            /*
+            X O X
+            O X X
+            O X O
+             */
             if (board[coords.x][coords.y] != null) {
                 return true;
             }

@@ -43,7 +43,8 @@ module.exports = function(injected){
                         }]);
                     },
                     "PlaceMove": function(cmd){
-                        console.log(cmd);
+                        // Check if correct player is placing
+                        console.log("Moves: " + gameState.getMoveCount());
                         if (gameState.getCurrentPlayer() !== cmd.side) {
                             eventHandler( [{
                                 gameId: cmd.gameId,
@@ -57,6 +58,7 @@ module.exports = function(injected){
                             return;
                         }
 
+                        // Check if player is placing in empty cell
                         if (gameState.isCellOccupied(cmd.coords)) {
                             eventHandler( [{
                                 gameId: cmd.gameId,
@@ -70,6 +72,7 @@ module.exports = function(injected){
                             return;
                         }
 
+                        // Create the event and process it
                         events = [
                             {
                                 gameId: cmd.gameId,
@@ -81,11 +84,11 @@ module.exports = function(injected){
                                 coords: cmd.coords
                             }
                         ];
-                        // Check here for conditions which prevent command from altering state
+
                         gameState.processEvents(events);
 
-                        // Check here for conditions which may warrant additional events to be emitted.
-                        if (gameState.getMoveCount() == 9) {
+                        // Check for game over conditions and add them to the events if needed
+                        if (gameState.getMoveCount() === 9) {
                             events.push({
                                 gameId: cmd.gameId,
                                 type: "GameDraw",
