@@ -43,6 +43,25 @@ module.exports = function (injected) {
             return moveCount;
         }
 
+        function hasPlayerWon(player) {
+            for (var i = 0; i < 3; i++) {
+                // Horizontal
+                if (board[i][0] === player &&
+                    board[i][1] === player &&
+                    board[i][2] === player) {
+                    return true;
+                }
+                // Vertical
+                if (board[0][i] === player &&
+                    board[1][i] === player &&
+                    board[2][i] === player) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         function isCellOccupied(coords) {
             /*
             0,0    0,1    0,2
@@ -69,7 +88,8 @@ module.exports = function (injected) {
             isGameFull: isGameFull,
             getCurrentPlayer: getCurrentPlayer,
             getMoveCount: getMoveCount,
-            isCellOccupied: isCellOccupied
+            isCellOccupied: isCellOccupied,
+            hasPlayerWon: hasPlayerWon
         }
     };
 };

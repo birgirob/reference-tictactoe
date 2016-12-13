@@ -44,7 +44,6 @@ module.exports = function(injected){
                     },
                     "PlaceMove": function(cmd){
                         // Check if correct player is placing
-                        console.log("Moves: " + gameState.getMoveCount());
                         if (gameState.getCurrentPlayer() !== cmd.side) {
                             eventHandler( [{
                                 gameId: cmd.gameId,
@@ -87,8 +86,19 @@ module.exports = function(injected){
 
                         gameState.processEvents(events);
 
+                        if (gameState.hasPlayerWon(cmd.side)) {
+                            events.push({
+                                gameId: cmd.gameId,
+                                type: "GameWon",
+                                user: cmd.user,
+                                name: cmd.name,
+                                timeStamp: cmd.timeStamp,
+                                side: cmd.side
+                            })
+                        }
+
                         // Check for game over conditions and add them to the events if needed
-                        if (gameState.getMoveCount() === 9) {
+                        else if (gameState.getMoveCount() === 9) {
                             events.push({
                                 gameId: cmd.gameId,
                                 type: "GameDraw",
