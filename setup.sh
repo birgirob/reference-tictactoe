@@ -70,4 +70,16 @@ if [[ $rc != 0 ]] ; then
     exit $rc
 fi
 
+# Push the images
+echo Pushing docker images
+
+docker push birgirob/tictactoe:$GIT_COMMIT
+docker push birgirob/tictactoe:latest
+
+rc=$?
+if [[ $rc != 0 ]] ; then
+    echo "Docker push failed " $rc
+    exit $rc
+fi
+
 echo "Done"

@@ -19,7 +19,7 @@ exports.up = function(db, callback) {
 };
 
 exports.down = function(db, callback) {
-  return null;
+  db.removeColumn('eventlog', 'aggregate_id', callback);
 };
 
 exports._meta = {
