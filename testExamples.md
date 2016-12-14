@@ -57,7 +57,7 @@ Then [ PlayerWon(X) ]
 
 - Place drawing move
 Given [ MoveCount = 8 ],
-When [ PlaceMove(O) ],
-Then [ GameDraw() if not PlayerWon(O) ]
+When [ PlaceMove(X) ],
+Then [ GameDraw() if not PlayerWon(X) ]
 
 

@@ -22,7 +22,7 @@ module.exports = function(injected){
 
                     },
                     "JoinGame": function (cmd) {
-                        if(gameState.gameFull()){
+                        if(gameState.isGameFull()){
                             eventHandler( [{
                                 gameId: cmd.gameId,
                                 type: "FullGameJoinAttempted",
@@ -43,12 +43,72 @@ module.exports = function(injected){
                         }]);
                     },
                     "PlaceMove": function(cmd){
+                        // Check if correct player is placing
+                        if (gameState.getCurrentPlayer() !== cmd.side) {
+                            eventHandler( [{
+                                gameId: cmd.gameId,
+                                type: "IllegalMoveNotYourTurn",
+                                user: cmd.user,
+                                name: cmd.name,
+                                timeStamp: cmd.timeStamp,
+                                side: cmd.side,
+                                coords: cmd.coords
+                            }]);
+                            return;
+                        }
 
-                        // Check here for conditions which prevent command from altering state
+                        // Check if player is placing in empty cell
+                        if (gameState.isCellOccupied(cmd.coords)) {
+                            eventHandler( [{
+                                gameId: cmd.gameId,
+                                type: "IllegalMoveOccupiedCell",
+                                user: cmd.user,
+                                name: cmd.name,
+                                timeStamp: cmd.timeStamp,
+                                side: cmd.side,
+                                coords: cmd.coords
+                            }]);
+                            return;
+                        }
+
+                        // Create the event and process it
+                        events = [
+                            {
+                                gameId: cmd.gameId,
+                                type: "MovePlaced",
+                                user: cmd.user,
+                                name: cmd.name,
+                                timeStamp: cmd.timeStamp,
+                                side: cmd.side,
+                                coords: cmd.coords
+                            }
+                        ];
 
                         gameState.processEvents(events);
 
-                        // Check here for conditions which may warrant additional events to be emitted.
+                        // Check for game over events and add them to the event array
+
+                        // Check if current player has won
+                        if (gameState.hasPlayerWon(cmd.side)) {
+                            events.push({
+                                gameId: cmd.gameId,
+                                type: "GameWon",
+                                user: cmd.user,
+                                name: cmd.name,
+                                timeStamp: cmd.timeStamp,
+                                side: cmd.side
+                            })
+                        }
+
+                        // Check if game is a draw
+                        else if (gameState.getMoveCount() === 9) {
+                            events.push({
+                                gameId: cmd.gameId,
+                                type: "GameDraw",
+                                name: cmd.name,
+                                timeStamp: cmd.timeStamp
+                            });
+                        }
                         eventHandler(events);
                     }
                 };

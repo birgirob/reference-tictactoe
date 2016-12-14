@@ -49,16 +49,6 @@ var gameJoinedEvent = {
     side: "O"
 };
 
-var joinFullGameEvent = {
-    gameId: 1,
-    type: "JoinGame",
-    user: {
-        userName: "Guy 3",
-    },
-    name: "TheFirstGame",
-    timeStamp: "2016-12-09T12:00:20"
-};
-
 var fullGameJoinAttemptedEvent = {
     gameId: 1,
     type: "FullGameJoinAttempted",
@@ -77,11 +67,29 @@ var placeMoveEvent = {
     },
     name: "TheFirstGame",
     timeStamp: "2016-12-09T12:00:30",
-    side: "X"
+    side: "X",
+    coords: {
+        x: 0,
+        y: 0
+    }
 }
 
+var firstMovePlacedEvent = {
+    gameId: 1,
+    type: "MovePlaced",
+    user: {
+        userName: "Guy 1"
+    },
+    name: "TheFirstGame",
+    timeStamp: "2016-12-09T12:00:30",
+    side: "X",
+    coords: {
+        x: 0,
+        y: 0
+    }
+};
 
-describe('create game command', function() {
+describe('Create game command', function() {
 
 
     var given, when, then;
@@ -109,7 +117,7 @@ describe('create game command', function() {
 });
 
 
-describe('join game command', function () {
+describe('Join game command', function () {
 
 
     var given, when, then;
@@ -148,6 +156,470 @@ describe('join game command', function () {
             timeStamp: "2016-12-09T12:00:20"
         };
         then = [ fullGameJoinAttemptedEvent ];
+    });
+});
+
+describe('Place move command', function () {
+
+
+    var given, when, then;
+
+    beforeEach(function () {
+        given = undefined;
+        when = undefined;
+        then = undefined;
+    });
+
+    afterEach(function () {
+        tictactoe(given).executeCommand(when, function (actualEvents) {
+            should(JSON.stringify(actualEvents)).be.exactly(JSON.stringify(then));
+        });
+    });
+
+
+    it('should emit MovePlaced event when placing legal move', function () {
+
+        given = [ gameCreatedEvent, gameJoinedEvent ];
+        when = placeMoveEvent;
+        then = [ {
+            gameId: 1,
+            type: "MovePlaced",
+            user: {
+                userName: "Guy 1"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:30",
+            side: "X",
+            coords: {
+                x: 0, y: 0
+            }
+        } ];
+
+    });
+
+    it('should emit IllegalMoveNotYourTurn event when wrong player is placing a move', function() {
+       given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent ];
+       when = placeMoveEvent;
+       then = [ {
+           gameId: 1,
+           type: "IllegalMoveNotYourTurn",
+           user: {
+               userName: "Guy 1"
+           },
+           name: "TheFirstGame",
+           timeStamp: "2016-12-09T12:00:30",
+           side: "X",
+           coords: {
+               x: 0, y: 0
+           }
+       }];
+    });
+
+    it('should emit IllegalMove event when placing in occupied cell', function() {
+
+        given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent ];
+        when = {
+            gameId: 1,
+            type: "PlaceMove",
+            user: {
+                userName: "Guy 2"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "O",
+            coords: {
+                x: 0, y: 0
+            }
+        };
+        then = [ {
+            gameId: 1,
+            type: "IllegalMoveOccupiedCell",
+            user: {
+                userName: "Guy 2",
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "O",
+            coords: {
+                x: 0, y: 0
+            }
+        }];
+    });
+
+    it('should emit GameDraw event when no one has won after 9 moves', function() {
+
+        given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent,
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 0, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 0, y: 2
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 1, y: 0
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 1, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 2, y: 0
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 1, y: 2
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 2, y: 2
+                }
+            }];
+        when = {
+            gameId: 1,
+            type: "PlaceMove",
+            user: {
+                userName: "Guy 1"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "X",
+            coords: {
+                x: 2, y: 1
+            }
+        };
+        then = [
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 2, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "GameDraw",
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40"
+            }
+        ];
+    });
+
+    it('should emit game won event if player places winning move (horizontal)', function() {
+        given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent,
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 1, y: 0
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 0, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 2, y: 0
+                }
+            }
+        ];
+        when = {
+            gameId: 1,
+            type: "PlaceMove",
+            user: {
+                userName: "Guy 1"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "X",
+            coords: {
+                x: 0, y: 2
+            }
+        };
+        then = [
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 0, y: 2
+                }
+            },
+            {
+                gameId: 1,
+                type: "GameWon",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X"
+            }
+        ];
+    });
+
+    it('should emit game won event if player places winning move (vertical)', function() {
+        given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent,
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 0, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 1, y: 0
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 0, y: 2
+                }
+            }
+        ];
+        when = {
+            gameId: 1,
+            type: "PlaceMove",
+            user: {
+                userName: "Guy 1"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "X",
+            coords: {
+                x: 2, y: 0
+            }
+        };
+        then = [
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 2, y: 0
+                }
+            },
+            {
+                gameId: 1,
+                type: "GameWon",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X"
+            }
+        ];
+    });
+
+    it('should emit game won event if player places winning move (diagonal)', function() {
+        given = [ gameCreatedEvent, gameJoinedEvent, firstMovePlacedEvent,
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 0, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 1, y: 1
+                }
+            },
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 2"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "O",
+                coords: {
+                    x: 0, y: 2
+                }
+            }
+        ];
+        when = {
+            gameId: 1,
+            type: "PlaceMove",
+            user: {
+                userName: "Guy 1"
+            },
+            name: "TheFirstGame",
+            timeStamp: "2016-12-09T12:00:40",
+            side: "X",
+            coords: {
+                x: 2, y: 2
+            }
+        };
+        then = [
+            {
+                gameId: 1,
+                type: "MovePlaced",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X",
+                coords: {
+                    x: 2, y: 2
+                }
+            },
+            {
+                gameId: 1,
+                type: "GameWon",
+                user: {
+                    userName: "Guy 1"
+                },
+                name: "TheFirstGame",
+                timeStamp: "2016-12-09T12:00:40",
+                side: "X"
+            }
+        ];
     });
 });
 
