@@ -9,13 +9,14 @@ export default function (injected) {
         constructor() {
             super();
             this.state = {
+                side: 'X'
             }
         }
         componentWillMount(){
         }
         render() {
             return <div className="ticcell">
-                CELL
+                {this.state.side}
             </div>
         }
     }
