@@ -4,6 +4,8 @@ module.exports=function(injected){
     const RoutingContext = require('../../client/src/routing-context');
     const generateUUID = require('../../client/src/common/framework/uuid');
 
+
+
     var connectCount =0;
     var id = generateUUID();
 
@@ -12,7 +14,7 @@ module.exports=function(injected){
         var commandId=0;
 
         var game = {
-            gameId: id
+            gameId: generateUUID()
         };
 
         var routingContext = RoutingContext(inject({
@@ -69,6 +71,7 @@ module.exports=function(injected){
                 return me;
             },
             expectGameCreated:()=>{
+                waitingFor.push('expectGameCreated');
                 routingContext.eventRouter.on("GameCreated", function(g) {
                     expect(g.gameId).toBeDefined();
                     if (g.gameId === game.gameId) {
@@ -94,10 +97,8 @@ module.exports=function(injected){
                 waitingFor.push("expectGameJoined");
                 routingContext.eventRouter.on("GameJoined", function(g) {
                     expect(g).toBeDefined();
-                    if (g.gameId === game.gameId) {
-                        waitingFor.pop();
-                        game = g;
-                    }
+                    waitingFor.pop();
+                    game = g;
                 });
                 return me;
             },
