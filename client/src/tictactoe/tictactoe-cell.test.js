@@ -33,9 +33,6 @@ describe("Tic Cell", function () {
     });
 
     it('should record move with matching game id and coordinates ',function(){
-        eventRouter.on('*', function(cb) {
-            console.log(cb);
-        })
         eventRouter.routeMessage({
             cmdId: 0,
             type: 'PlaceMove'
@@ -49,9 +46,6 @@ describe("Tic Cell", function () {
     });
 
     it('should issue PlaceMove command with gameId, mySide and coordinates when clicked', ()=>{
-        eventRouter.on('*', function(msg) {
-            console.log(msg);
-    })
         component.find('div').simulate('click');
     //.. check whether correct command was dispatched through command router
 });

@@ -56,9 +56,6 @@ fdescribe('Tictactoe load test', function() {
                                         .expectGameWon().then(function() {
                                             userA.disconnect();
                                             userB.disconnect();
-                                            _.each(users, function(usr) {
-                                                usr.disconnect();
-                                            });
 
                                             var endMillis = new Date().getTime();
                                             var duration = endMillis - startMillis;
